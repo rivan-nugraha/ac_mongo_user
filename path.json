@@ -1,0 +1,6 @@
+{
+    "backendPath": [
+        "./test/.env",
+        "./test1/.env"
+    ]
+}
