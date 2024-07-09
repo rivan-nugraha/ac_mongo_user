@@ -3,10 +3,14 @@ const os = require("os");
 const express = require("express");
 const app = express()
 const Encryptor = require("./encryptor");
+const dotenv = require('dotenv');
 const encryptor = new Encryptor();
 const port = 4010;
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
 
+dotenv.config();
+
+const token_access = process.env.TOKEN_ACCESS;
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -36,14 +40,25 @@ const changeUserPasswordMongo = (mongoUrl, userPassword) => {
     return "mongodb+srv://" + userPassword + clusterAndDBName;
 }
 
+const tokenChecker = (token) => {
+    if (!token) {
+        throw new Error("Token Is Required");
+    }
+
+    if (token !== token_access) {
+        throw new Error("Wrong Token");
+    }
+}
+
 app.post("/change", (req, res) => {
+    const token = req.headers["token"];
     const body = req.body;
     try {
+        tokenChecker(token);
         setEnvValue("NGO_URLDB_API", body.user_pass);
         res.status(200).send({message: "Success To Change Username"})
     } catch (error) {
-        console.log(error);
-        res.status(500).send(error);        
+        res.status(500).send({message: error.message});
     }
 });
 
