@@ -5,12 +5,13 @@ const app = express()
 const Encryptor = require("./encryptor");
 const dotenv = require('dotenv');
 const encryptor = new Encryptor();
-const port = process.env.PORT;
 const bodyParser = require('body-parser');
 
 dotenv.config();
 
+const port = process.env.PORT;
 const token_access = process.env.TOKEN_ACCESS;
+
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true }))
 
