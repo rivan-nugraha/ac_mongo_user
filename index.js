@@ -5,7 +5,7 @@ const app = express()
 const Encryptor = require("./encryptor");
 const dotenv = require('dotenv');
 const encryptor = new Encryptor();
-const port = 4010;
+const port = process.env.PORT;
 const bodyParser = require('body-parser');
 
 dotenv.config();
@@ -45,7 +45,7 @@ const tokenChecker = (token) => {
         throw new Error("Token Is Required");
     }
 
-    if (token !== token_access) {
+    if (encryptor.doDecrypt(token) !== token_access) {
         throw new Error("Wrong Token");
     }
 }
